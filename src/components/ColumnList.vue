@@ -4,7 +4,7 @@
       <div class="card h-100 shadow-sm">
         <div class="card-body text-center">
           <img
-            class="rounded-circle border border-light w-25 my-3"
+            class="rounded-circle border border-light my-3"
             :src="v.avatar"
             :alt="v.title"
           />
@@ -52,5 +52,9 @@ export default defineComponent({
 })
 </script>
 
-<style>
+<style scoped>
+.card-body img {
+  width: 50px;
+  height: 50px;
+}
 </style>
