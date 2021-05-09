@@ -4,6 +4,8 @@
 
 **说明：**
 
+- 项目：抒见专栏，一个类似知乎专栏的网站
+
 - 技术栈：vue3 + ts + bootstrap + vuex + vue-router + axios
 
 - 规范：eslint-standard，需vscode插件EditorConfig for VS Code、vetur、Prettier - Code formatter
