@@ -1,7 +1,5 @@
 <template>
-  <li
-  class="dropdown-option"
-  :class="{ 'is-disabled': disabled }">
+  <li class="dropdown-option" :class="{ 'is-disabled': disabled }">
     <slot></slot>
   </li>
 </template>
