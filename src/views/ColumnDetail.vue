@@ -16,28 +16,35 @@
         <p class="text-muted">{{ column.description }}</p>
       </div>
     </div>
-    <!-- <post-list :list="list"></post-list> -->
+    <post-list :list="list"></post-list>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
-// import { useRoute } from 'vue-router'
-// import { useStore } from 'vuex'
+import { defineComponent, computed, onMounted } from 'vue'
+import { useRoute } from 'vue-router'
+import { useStore } from 'vuex'
+import { GlobalDataProps } from '@/store'
 
-// import PostList from '@/components/PostList.vue'
+import PostList from '@/components/PostList.vue'
 
 export default defineComponent({
-  name: 'ColumnDetail'
-  // components: { PostList }
-  // setup() {
-  //   const route = useRoute()
-  //   const store = useStore()
-  //   const currentId = +route.params.id
-  //   const column = computed(() => store.getters.getColumnById(currentId))
-  //   const list = computed(() => store.getters.getPostsById(currentId))
+  name: 'ColumnDetail',
+  components: { PostList },
+  setup() {
+    const route = useRoute()
+    const store = useStore<GlobalDataProps>()
+    const currentId = route.params.id
 
-  //   return { column, list }
-  // }
+    onMounted(() => {
+      store.dispatch('getColumn', currentId)
+      store.dispatch('getPosts', currentId)
+    })
+
+    const column = computed(() => store.getters.getColumnById(currentId))
+    const list = computed(() => store.getters.getPostsById(currentId))
+
+    return { column, list }
+  }
 })
 </script>
