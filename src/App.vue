@@ -2,6 +2,7 @@
   <div class="container">
     <!-- 顶部 -->
     <global-header :user="currentUser"></global-header>
+    <h1>{{ error.message }}</h1>
     <loader v-if="isLoading"></loader>
     <!-- 主体 -->
     <router-view></router-view>
@@ -39,8 +40,9 @@ export default defineComponent({
   setup() {
     const store = useStore<GlobalDataProps>()
     const currentUser = computed(() => store.state.user)
-    const token = computed(() => store.state.token)
     const isLoading = computed(() => store.state.isLoading)
+    const token = computed(() => store.state.token)
+    const error = computed(() => store.state.error)
 
     onMounted(() => {
       if (!currentUser.value.isLogin && token.value) {
@@ -51,7 +53,8 @@ export default defineComponent({
 
     return {
       currentUser,
-      isLoading
+      isLoading,
+      error
     }
   }
 })

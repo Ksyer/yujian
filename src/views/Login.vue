@@ -52,8 +52,14 @@ export default defineComponent({
           email: emailVal.value,
           password: passwordVal.value
         }
-        store.dispatch('loginAndCurrentUser', payload)
-        router.push('/')
+        store
+          .dispatch('loginAndCurrentUser', payload)
+          .then(res => {
+            router.push('/')
+          })
+          .catch(err => {
+            console.log(err)
+          })
       }
     }
 

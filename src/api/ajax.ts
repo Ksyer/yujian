@@ -20,7 +20,12 @@ const ajax = (baseURL: string, url: string, data = {}, method = 'GET') => {
       store.commit('setLoading', false)
       return res.data
     },
-    err => err
+    err => {
+      const { error } = err.response.data
+      store.commit('setError', { status: true, message: error })
+      store.commit('setLoading', false)
+      return Promise.reject(err.response.data)
+    }
   )
 
   switch (method) {
