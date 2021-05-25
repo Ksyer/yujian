@@ -2,7 +2,7 @@
   <div class="container">
     <!-- 顶部 -->
     <global-header :user="currentUser"></global-header>
-
+    <loader v-if="isLoading"></loader>
     <!-- 主体 -->
     <router-view></router-view>
     <!-- 底部 -->
@@ -22,21 +22,26 @@
 <script lang="ts">
 import { computed, defineComponent } from 'vue'
 import { useStore } from 'vuex'
+import { GlobalDataProps } from '@/store'
 import GlobalHeader from './components/GlobalHeader.vue'
+import Loader from '@/components/Loader.vue'
 
 import 'bootstrap/dist/css/bootstrap.min.css'
 
 export default defineComponent({
   name: 'App',
   components: {
-    GlobalHeader
+    GlobalHeader,
+    Loader
   },
   setup() {
-    const store = useStore()
+    const store = useStore<GlobalDataProps>()
     const currentUser = computed(() => store.state.user)
+    const isLoading = computed(() => store.state.isLoading)
 
     return {
-      currentUser
+      currentUser,
+      isLoading
     }
   }
 })
