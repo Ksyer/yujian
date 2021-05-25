@@ -4,6 +4,7 @@
     <global-header :user="currentUser"></global-header>
     <h1>{{ error.message }}</h1>
     <loader v-if="isLoading"></loader>
+    <message type="error" :message="error.message" v-if="error.status"></message>
     <!-- 主体 -->
     <router-view></router-view>
     <!-- 底部 -->
@@ -28,6 +29,7 @@ import axios from 'axios'
 
 import GlobalHeader from './components/GlobalHeader.vue'
 import Loader from '@/components/Loader.vue'
+import Message from '@/components/Message.vue'
 
 import 'bootstrap/dist/css/bootstrap.min.css'
 
@@ -35,7 +37,8 @@ export default defineComponent({
   name: 'App',
   components: {
     GlobalHeader,
-    Loader
+    Loader,
+    Message
   },
   setup() {
     const store = useStore<GlobalDataProps>()
