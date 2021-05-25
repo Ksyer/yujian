@@ -3,11 +3,17 @@
 // http://api.vikingship.xyz/api/columns
 
 import ajax from '@/api/ajax'
+import { LoginProps } from '@/store'
 
 const BASE_URL = '/api'
 
 /* 用户模块
 -----------------------------------------------------------------*/
+// 请求登录
+export const reqLogin = (user: LoginProps) => ajax(BASE_URL, '/user/login', user, 'POST')
+
+// 请求当前用户信息
+export const reqCurrentUser = () => ajax(BASE_URL, '/user/current')
 
 /* 专栏模块
 -----------------------------------------------------------------*/

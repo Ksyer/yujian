@@ -1,11 +1,18 @@
 import { createStore } from 'vuex'
-import { reqColumns, reqColumn, reqPosts } from '@/api'
+import { reqColumns, reqColumn, reqPosts, reqLogin, reqCurrentUser } from '@/api'
+import axios from 'axios'
+
+export interface LoginProps {
+  email: string
+  password: string
+}
 
 export interface UserProps {
   isLogin: boolean
-  name?: string
-  id?: number
-  columnId?: number
+  nickName?: string
+  _id?: string
+  column?: string
+  email?: string
 }
 
 interface ImageProps {
@@ -33,6 +40,7 @@ export interface PostProps {
 }
 
 export interface GlobalDataProps {
+  token: string
   isLoading: boolean
   columns: ColumnProps[]
   posts: PostProps[]
@@ -41,15 +49,13 @@ export interface GlobalDataProps {
 
 const store = createStore<GlobalDataProps>({
   state: {
+    token: localStorage.getItem('token') || '',
     isLoading: false,
     columns: [],
     posts: [],
-    user: { isLogin: true, name: 'wyh', columnId: 1 }
+    user: { isLogin: false }
   },
   mutations: {
-    login(state) {
-      state.user = { ...state.user, isLogin: true, name: 'wyh' }
-    },
     createPost(state, newPost) {
       state.posts.push(newPost)
     },
@@ -64,6 +70,15 @@ const store = createStore<GlobalDataProps>({
     },
     setLoading(state, status) {
       state.isLoading = status
+    },
+    login(state, rawData) {
+      const { token } = rawData.data
+      state.token = token
+      localStorage.setItem('token', token)
+      axios.defaults.headers.common.Authorization = `Bearer ${token}`
+    },
+    getCurrentUser(state, rawData) {
+      state.user = { isLogin: true, ...rawData.data }
     }
   },
   actions: {
@@ -71,13 +86,26 @@ const store = createStore<GlobalDataProps>({
       const res = await reqColumns()
       ctx.commit('getColumns', res)
     },
-    async getColumn({ commit }, cid) {
+    async getColumn({ commit }, cid: string) {
       const res = await reqColumn(cid)
       commit('getColumn', res)
     },
-    async getPosts({ commit }, cid) {
+    async getPosts({ commit }, cid: string) {
       const res = await reqPosts(cid)
       commit('getPosts', res)
+    },
+    async login({ commit }, payload: LoginProps) {
+      const res = await reqLogin(payload)
+      commit('login', res)
+    },
+    async getCurrentUser({ commit }) {
+      const res = await reqCurrentUser()
+      commit('getCurrentUser', res)
+    },
+    loginAndCurrentUser({ dispatch }, loginData: LoginProps) {
+      return dispatch('login', loginData).then(() => {
+        return dispatch('getCurrentUser')
+      })
     }
   },
   getters: {
