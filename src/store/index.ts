@@ -94,23 +94,23 @@ const store = createStore<GlobalDataProps>({
   actions: {
     async getColumns(ctx) {
       const res = await reqColumns()
-      ctx.commit('getColumns', res)
+      ctx.commit('getColumns', res.data)
     },
     async getColumn({ commit }, cid: string) {
       const res = await reqColumn(cid)
-      commit('getColumn', res)
+      commit('getColumn', res.data)
     },
     async getPosts({ commit }, cid: string) {
       const res = await reqPosts(cid)
-      commit('getPosts', res)
+      commit('getPosts', res.data)
     },
     async login({ commit }, payload: LoginProps) {
       const res = await reqLogin(payload)
-      commit('login', res)
+      commit('login', res.data)
     },
     async getCurrentUser({ commit }) {
       const res = await reqCurrentUser()
-      commit('getCurrentUser', res)
+      commit('getCurrentUser', res.data)
     },
     loginAndCurrentUser({ dispatch }, loginData: LoginProps) {
       return dispatch('login', loginData).then(() => {

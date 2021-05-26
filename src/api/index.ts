@@ -34,3 +34,8 @@ export const reqColumn = (cid: string) => ajax(BASE_URL, `/columns/${cid}`)
 
 // 通过id请求文章列表
 export const reqPosts = (cid: string) => ajax(BASE_URL, `/columns/${cid}/posts`)
+
+/* 文章模块
+-----------------------------------------------------------------*/
+// 文件上传
+export const reqUpload = <T>(url: string, formData: T) => ajax(BASE_URL, url, formData, 'POST')
