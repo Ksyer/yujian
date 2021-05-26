@@ -4,7 +4,6 @@
     <global-header :user="currentUser"></global-header>
     <h1>{{ error.message }}</h1>
     <loader v-if="isLoading"></loader>
-    <!-- <message type="error" :message="error.message" v-if="error.status"></message> -->
     <!-- 主体 -->
     <router-view></router-view>
     <!-- 底部 -->
@@ -22,7 +21,7 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, onMounted, watch } from 'vue'
+import { computed, defineComponent, watch } from 'vue'
 import { useStore } from 'vuex'
 import { GlobalDataProps } from '@/store'
 
@@ -42,7 +41,6 @@ export default defineComponent({
     const store = useStore<GlobalDataProps>()
     const currentUser = computed(() => store.state.user)
     const isLoading = computed(() => store.state.isLoading)
-    const token = computed(() => store.state.token)
     const error = computed(() => store.state.error)
 
     watch(
