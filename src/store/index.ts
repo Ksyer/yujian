@@ -2,6 +2,12 @@ import { createStore } from 'vuex'
 import { reqColumns, reqColumn, reqPosts, reqLogin, reqCurrentUser } from '@/api'
 import axios from 'axios'
 
+export interface ResponseTypeProps<P> {
+  code: number
+  msg: string
+  data: P
+}
+
 export interface LoginProps {
   email: string
   password: string
@@ -15,7 +21,7 @@ export interface UserProps {
   email?: string
 }
 
-interface ImageProps {
+export interface ImageProps {
   _id?: string
   url?: string
   createdAt?: string

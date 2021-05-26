@@ -1,6 +1,7 @@
 <template>
   <div class="create-post-page">
     <h4>新建文章</h4>
+    <uploader action="/upload" :beforeUpload="beforeUpload" @file-uploaded="onFileUploaded"></uploader>
     <validate-form @form-submit="onFormSubmit">
       <div class="mb-3">
         <label class="form-label">文章标题：</label>
@@ -30,13 +31,20 @@
 import { defineComponent, ref } from 'vue'
 import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
-import { GlobalDataProps, PostProps } from '@/store'
+import { GlobalDataProps, ResponseTypeProps, ImageProps } from '@/store'
 
 import ValidateForm from '@/components/ValidateForm.vue'
 import ValidateInput from '@/components/ValidateInput.vue'
+import Uploader from '@/components/Uploader.vue'
+
+import createMessage from '@/utils/createMessage'
 
 export default defineComponent({
-  components: { ValidateForm, ValidateInput },
+  components: {
+    ValidateForm,
+    ValidateInput,
+    Uploader
+  },
   setup() {
     const store = useStore<GlobalDataProps>()
     const router = useRouter()
@@ -45,21 +53,33 @@ export default defineComponent({
     const contentVal = ref('')
     const contentRules = [{ type: 'required', message: '文章不能为空' }]
 
-    const onFormSubmit = (result: boolean) => {
-      if (result) {
-        const { columnId } = store.state.user
-        if (columnId) {
-          const newPost: PostProps = {
-            id: new Date().getTime(),
-            title: titleVal.value,
-            content: contentVal.value,
-            columnId,
-            createdAt: new Date().toLocaleString()
-          }
-          store.commit('createPost', newPost)
-          router.push({ name: 'column', params: { id: columnId } })
-        }
+    const beforeUpload = (file: File) => {
+      const isJPEG = file.type === 'image/jpeg'
+      if (!isJPEG) {
+        createMessage('上传图片只能是JPG格式', 'error')
       }
+      return isJPEG
+    }
+
+    const onFileUploaded = (rawData: ResponseTypeProps<ImageProps>) => {
+      createMessage(`上传图片ID ${rawData.data._id}`, 'success')
+    }
+
+    const onFormSubmit = (result: boolean) => {
+      //   if (result) {
+      //     const { columnId } = store.state.user
+      //     if (columnId) {
+      //       const newPost: PostProps = {
+      //         _id: new Date().getTime() + '',
+      //         title: titleVal.value,
+      //         content: contentVal.value,
+      //         column,
+      //         createdAt: new Date().toLocaleString()
+      //       }
+      //       store.commit('createPost', newPost)
+      //       router.push({ name: 'column', params: { id: columnId } })
+      //     }
+      //   }
     }
 
     return {
@@ -67,7 +87,9 @@ export default defineComponent({
       titleRules,
       contentVal,
       contentRules,
-      onFormSubmit
+      beforeUpload,
+      onFormSubmit,
+      onFileUploaded
     }
   }
 })

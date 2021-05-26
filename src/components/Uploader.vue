@@ -31,7 +31,8 @@ export default defineComponent({
       type: Function as PropType<CheckFunction>
     }
   },
-  setup(props) {
+  emits: ['file-uploaded', 'file-uploaded-error'],
+  setup(props, ctx) {
     const fileInput = ref<null | HTMLInputElement>(null)
     const fileStatus = ref<UploadStatus>('ready')
 
@@ -57,8 +58,10 @@ export default defineComponent({
           const res = await reqUpload(props.action, formData)
           if (res.data.code === 0) {
             fileStatus.value = 'success'
+            ctx.emit('file-uploaded', res.data)
           } else {
             fileStatus.value = 'error'
+            ctx.emit('file-uploaded-error', res.data)
           }
         } finally {
           if (fileInput.value) {
