@@ -2,6 +2,7 @@
 ---------------------------------------------------------------- */
 import { createRouter, createWebHistory } from 'vue-router'
 import store from '@/store'
+import axios from 'axios'
 
 /* 路由组件
 ---------------------------------------------------------------- */
@@ -47,12 +48,38 @@ const router = createRouter({
 })
 
 router.beforeEach((to, _, next) => {
-  if (to.meta.requiredLogin && !store.state.user.isLogin) {
-    next({ name: 'login' })
-  } else if (to.meta.redirectAlreadyLogin && store.state.user.isLogin) {
-    next('/')
+  const { user, token } = store.state
+  const { requiredLogin, redirectAlreadyLogin } = to.meta
+  if (!user.isLogin) {
+    if (token) {
+      axios.defaults.headers.common.Authorization = `Bearer ${token}`
+      store
+        .dispatch('getCurrentUser')
+        .then(() => {
+          if (redirectAlreadyLogin) {
+            next('/')
+          } else {
+            next()
+          }
+        })
+        .catch(err => {
+          console.log(err)
+          localStorage.removeItem('token')
+          next('login')
+        })
+    } else {
+      if (requiredLogin) {
+        next('login')
+      } else {
+        next()
+      }
+    }
   } else {
-    next()
+    if (redirectAlreadyLogin) {
+      next('/')
+    } else {
+      next()
+    }
   }
 })
 

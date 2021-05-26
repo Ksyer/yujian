@@ -25,7 +25,6 @@
 import { computed, defineComponent, onMounted, watch } from 'vue'
 import { useStore } from 'vuex'
 import { GlobalDataProps } from '@/store'
-import axios from 'axios'
 
 import GlobalHeader from './components/GlobalHeader.vue'
 import Loader from '@/components/Loader.vue'
@@ -45,13 +44,6 @@ export default defineComponent({
     const isLoading = computed(() => store.state.isLoading)
     const token = computed(() => store.state.token)
     const error = computed(() => store.state.error)
-
-    onMounted(() => {
-      if (!currentUser.value.isLogin && token.value) {
-        axios.defaults.headers.common.Authorization = `Bearer ${token.value}`
-        store.dispatch('getCurrentUser')
-      }
-    })
 
     watch(
       () => error.value.status,
