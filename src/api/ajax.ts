@@ -9,6 +9,7 @@ const ajax = (baseURL: string, url: string, data = {}, method = 'GET') => {
   instance.interceptors.request.use(
     req => {
       store.commit('setLoading', true)
+      store.commit('setError', { status: false, message: '' })
       return req
     },
     err => err
