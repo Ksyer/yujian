@@ -64,7 +64,7 @@ router.beforeEach((to, _, next) => {
         })
         .catch(err => {
           console.log(err)
-          localStorage.removeItem('token')
+          store.commit('logout')
           next('login')
         })
     } else {
