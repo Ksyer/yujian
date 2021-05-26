@@ -4,7 +4,7 @@
     <global-header :user="currentUser"></global-header>
     <h1>{{ error.message }}</h1>
     <loader v-if="isLoading"></loader>
-    <message type="error" :message="error.message" v-if="error.status"></message>
+    <!-- <message type="error" :message="error.message" v-if="error.status"></message> -->
     <!-- 主体 -->
     <router-view></router-view>
     <!-- 底部 -->
@@ -22,14 +22,14 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, onMounted } from 'vue'
+import { computed, defineComponent, onMounted, watch } from 'vue'
 import { useStore } from 'vuex'
 import { GlobalDataProps } from '@/store'
 import axios from 'axios'
 
 import GlobalHeader from './components/GlobalHeader.vue'
 import Loader from '@/components/Loader.vue'
-import Message from '@/components/Message.vue'
+import createMessage from '@/utils/createMessage'
 
 import 'bootstrap/dist/css/bootstrap.min.css'
 
@@ -37,8 +37,7 @@ export default defineComponent({
   name: 'App',
   components: {
     GlobalHeader,
-    Loader,
-    Message
+    Loader
   },
   setup() {
     const store = useStore<GlobalDataProps>()
@@ -53,6 +52,16 @@ export default defineComponent({
         store.dispatch('getCurrentUser')
       }
     })
+
+    watch(
+      () => error.value.status,
+      () => {
+        const { status, message } = error.value
+        if (status && message) {
+          createMessage(message, 'error')
+        }
+      }
+    )
 
     return {
       currentUser,
