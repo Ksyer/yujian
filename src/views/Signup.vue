@@ -58,7 +58,6 @@ import createMessage from '@/utils/createMessage'
 import { reqSignup } from '@/api'
 
 export default defineComponent({
-  name: 'signup',
   components: {
     ValidateInput,
     ValidateForm
