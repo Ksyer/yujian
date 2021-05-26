@@ -8,7 +8,7 @@
         >
       </li>
       <li class="list-inline-item">
-        <a class="btn btn-outline-light my-2" href="#">注册</a>
+        <router-link class="btn btn-outline-light my-2" :to="'/signup'">注册</router-link>
       </li>
     </ul>
     <ul class="list-inline mb-0" v-else>

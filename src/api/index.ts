@@ -5,6 +5,12 @@
 import ajax from '@/api/ajax'
 import { LoginProps } from '@/store'
 
+interface SigProps {
+  email: string
+  nickName: string
+  password: string
+}
+
 const BASE_URL = '/api'
 
 /* 用户模块
@@ -14,6 +20,9 @@ export const reqLogin = (user: LoginProps) => ajax(BASE_URL, '/user/login', user
 
 // 请求当前用户信息
 export const reqCurrentUser = () => ajax(BASE_URL, '/user/current')
+
+// 请求注册用户
+export const reqSignup = (user: SigProps) => ajax(BASE_URL, '/users', user, 'POST')
 
 /* 专栏模块
 -----------------------------------------------------------------*/
