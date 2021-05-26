@@ -20,7 +20,7 @@
           <dropdown-item disabled><a class="dropdown-item" href="#">编辑资料</a></dropdown-item
           >
           <dropdown-item
-            ><a class="dropdown-item" href="#">退出登录</a></dropdown-item
+            ><a class="dropdown-item" href="#" @click.prevent="onLogout">退出登录</a></dropdown-item
           >
         </dropdown>
       </li>
@@ -32,7 +32,7 @@
 import { defineComponent, PropType } from 'vue'
 import Dropdown from './Dropdown.vue'
 import DropdownItem from './DropdownItem.vue'
-import { UserProps } from '@/store'
+import store, { UserProps } from '@/store'
 
 export default defineComponent({
   name: 'GlobalHeader',
@@ -42,6 +42,13 @@ export default defineComponent({
       type: Object as PropType<UserProps>,
       required: true
     }
+  },
+  setup() {
+    const onLogout = () => {
+      store.commit('logout')
+    }
+
+    return { onLogout }
   }
 })
 </script>
