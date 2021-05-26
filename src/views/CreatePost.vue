@@ -1,7 +1,11 @@
 <template>
   <div class="create-post-page">
     <h4>新建文章</h4>
-    <uploader action="/upload" :beforeUpload="beforeUpload" @file-uploaded="onFileUploaded"></uploader>
+    <uploader action="/upload" :beforeUpload="beforeUpload" @file-uploaded="onFileUploaded">
+      <template #uploaded="dataProps">
+        <img :src="dataProps.uploadedData.data.url" width="500" :alt="dataProps.uploadedData.data.filename">
+      </template>
+    </uploader>
     <validate-form @form-submit="onFormSubmit">
       <div class="mb-3">
         <label class="form-label">文章标题：</label>
