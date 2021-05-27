@@ -3,7 +3,7 @@
 // http://api.vikingship.xyz/api/columns
 
 import ajax from '@/api/ajax'
-import { LoginProps } from '@/store'
+import { LoginProps, PostProps } from '@/store'
 
 interface SigProps {
   email: string
@@ -39,3 +39,6 @@ export const reqPosts = (cid: string) => ajax(BASE_URL, `/columns/${cid}/posts`)
 -----------------------------------------------------------------*/
 // 文件上传
 export const reqUpload = <T>(url: string, formData: T) => ajax(BASE_URL, url, formData, 'POST')
+
+// 新建文章
+export const reqCreatePost = (post: PostProps) => ajax(BASE_URL, '/posts', post, 'POST')

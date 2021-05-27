@@ -1,5 +1,5 @@
 import { createStore } from 'vuex'
-import { reqColumns, reqColumn, reqPosts, reqLogin, reqCurrentUser } from '@/api'
+import { reqColumns, reqColumn, reqPosts, reqLogin, reqCurrentUser, reqCreatePost } from '@/api'
 import axios from 'axios'
 
 export interface ResponseTypeProps<P> {
@@ -13,19 +13,20 @@ export interface LoginProps {
   password: string
 }
 
+export interface ImageProps {
+  _id?: string
+  url?: string
+  createdAt?: string
+  fitUrl?: string
+}
+
 export interface UserProps {
   isLogin: boolean
   nickName?: string
   _id?: string
   column?: string
   email?: string
-}
-
-export interface ImageProps {
-  _id?: string
-  url?: string
-  createdAt?: string
-  fitUrl?: string
+  avatar?: ImageProps
 }
 
 export interface ColumnProps {
@@ -36,13 +37,14 @@ export interface ColumnProps {
 }
 
 export interface PostProps {
-  _id: string
+  _id?: string
   title: string
   excerpt?: string
   content?: string
-  image?: string
-  createdAt: string
+  image?: ImageProps | string
+  createdAt?: string
   column: string
+  author?: string | UserProps
 }
 
 export interface GlobalErrorProps {
@@ -128,6 +130,10 @@ const store = createStore<GlobalDataProps>({
       return dispatch('login', loginData).then(() => {
         return dispatch('getCurrentUser')
       })
+    },
+    async createPost({ commit }, payload: PostProps) {
+      const res = await reqCreatePost(payload)
+      commit('createPost', res.data)
     }
   },
   getters: {
