@@ -4,6 +4,7 @@
     <uploader
       class="d-flex align-items-center justify-content-center bg-light text-secondary w-100 my-4"
       action="/upload"
+      :uploaded="uploadedData"
       :beforeUpload="uploadCheck"
       @file-uploaded="onFileUploaded"
     >
@@ -51,10 +52,15 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue'
+import { defineComponent, onMounted, ref } from 'vue'
 import { useStore } from 'vuex'
-import { useRouter } from 'vue-router'
-import { GlobalDataProps, ResponseTypeProps, ImageProps, PostProps } from '@/store'
+import { useRoute, useRouter } from 'vue-router'
+import {
+  GlobalDataProps,
+  ResponseTypeProps,
+  ImageProps,
+  PostProps
+} from '@/store'
 
 import ValidateForm from '@/components/ValidateForm.vue'
 import ValidateInput from '@/components/ValidateInput.vue'
@@ -70,8 +76,11 @@ export default defineComponent({
     Uploader
   },
   setup() {
+    const uploadedData = ref()
     const store = useStore<GlobalDataProps>()
     const router = useRouter()
+    const route = useRoute()
+    const isEditMode = !!route.query.id
     const titleVal = ref('')
     const titleRules = [{ type: 'required', message: '标题不能为空' }]
     const contentVal = ref('')
@@ -122,6 +131,21 @@ export default defineComponent({
       }
     }
 
+    onMounted(() => {
+      if (isEditMode) {
+        store
+          .dispatch('getPost', route.query.id)
+          .then((rawData: ResponseTypeProps<PostProps>) => {
+            const currentPost = rawData.data
+            if (currentPost.image) {
+              uploadedData.value = { data: currentPost.image }
+            }
+            titleVal.value = currentPost.title
+            contentVal.value = currentPost.content || ''
+          })
+      }
+    })
+
     return {
       titleVal,
       titleRules,
@@ -129,7 +153,8 @@ export default defineComponent({
       contentRules,
       uploadCheck,
       onFormSubmit,
-      onFileUploaded
+      onFileUploaded,
+      uploadedData
     }
   }
 })

@@ -106,7 +106,6 @@ const store = createStore<GlobalDataProps>({
       delete axios.defaults.headers.common.Authorization
     },
     getPost(state, rawData) {
-      console.log(rawData)
       state.posts = [rawData.data]
     }
   },
@@ -143,6 +142,7 @@ const store = createStore<GlobalDataProps>({
     async getPost({ commit }, id: string) {
       const res = await reqPost(id)
       commit('getPost', res.data)
+      return res.data
     }
   },
   getters: {
@@ -152,7 +152,7 @@ const store = createStore<GlobalDataProps>({
     getPostsById: state => (cid: string) => {
       return state.posts.filter(post => post.column === cid)
     },
-    getCurrentPost: (state) => () => {
+    getCurrentPost: state => () => {
       return state.posts[0]
     }
   }

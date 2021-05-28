@@ -22,6 +22,22 @@
         >
       </div>
       <div v-html="currentHTML"></div>
+      <div v-if="showEditArea" class="btn-group mt-5">
+        <router-link
+          type="button"
+          class="btn btn-success"
+          :to="{ name: 'create', query: { id: currentPost._id } }"
+        >
+          编辑
+        </router-link>
+        <button
+          type="button"
+          class="btn btn-danger"
+          @click.prevent="modalIsVisible = true"
+        >
+          删除
+        </button>
+      </div>
     </article>
   </div>
 </template>
@@ -30,7 +46,7 @@
 import { computed, defineComponent, onMounted } from 'vue'
 import { useStore } from 'vuex'
 import { useRoute } from 'vue-router'
-import { GlobalDataProps, ImageProps, PostProps } from '@/store'
+import { GlobalDataProps, ImageProps, PostProps, UserProps } from '@/store'
 import MarkdownIt from 'markdown-it'
 
 export default defineComponent({
@@ -45,7 +61,6 @@ export default defineComponent({
     const currentPost = computed<PostProps>(() =>
       store.getters.getCurrentPost()
     )
-    console.log(currentPost)
 
     const currentImageUrl = computed(() => {
       if (currentPost.value && currentPost.value.image) {
@@ -64,10 +79,21 @@ export default defineComponent({
       return null
     })
 
+    const showEditArea = computed(() => {
+      const { isLogin, _id } = store.state.user
+      if (currentPost.value && currentPost.value.author && isLogin) {
+        const postAuthor = currentPost.value.author as UserProps
+        return postAuthor._id === _id
+      } else {
+        return false
+      }
+    })
+
     return {
       currentPost,
       currentImageUrl,
-      currentHTML
+      currentHTML,
+      showEditArea
     }
   }
 })
