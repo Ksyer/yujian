@@ -48,3 +48,6 @@ export const reqPost = (id: string) => ajax(BASE_URL, `/posts/${id}`)
 
 // 更新文章
 export const reqUpdatePost = (post: PostProps) => ajax(BASE_URL, `/posts/${post._id}`, post, 'PATCH')
+
+// 删除文章
+export const reqDeletePost = (id: string) => ajax(BASE_URL, `/posts/${id}`, {}, 'DELETE')

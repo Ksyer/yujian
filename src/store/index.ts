@@ -1,5 +1,15 @@
 import { createStore } from 'vuex'
-import { reqColumns, reqColumn, reqPosts, reqLogin, reqCurrentUser, reqCreatePost, reqPost, reqUpdatePost } from '@/api'
+import {
+  reqColumns,
+  reqColumn,
+  reqPosts,
+  reqLogin,
+  reqCurrentUser,
+  reqCreatePost,
+  reqPost,
+  reqUpdatePost,
+  reqDeletePost
+} from '@/api'
 import axios from 'axios'
 
 export interface ResponseTypeProps<P> {
@@ -116,6 +126,9 @@ const store = createStore<GlobalDataProps>({
           return post
         }
       })
+    },
+    deletePost(state, { data }) {
+      state.posts = state.posts.filter(post => post._id !== data._id)
     }
   },
   actions: {
@@ -156,6 +169,11 @@ const store = createStore<GlobalDataProps>({
     async updatePost({ commit }, payload: PostProps) {
       const res = await reqUpdatePost(payload)
       commit('updatePost', res)
+    },
+    async deletePost({ commit }, id: string) {
+      const res = await reqDeletePost(id)
+      commit('deletePost', res)
+      return res.data
     }
   },
   getters: {

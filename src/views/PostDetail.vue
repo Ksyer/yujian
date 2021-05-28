@@ -39,22 +39,44 @@
         </button>
       </div>
     </article>
+
+    <modal
+      title="删除文章"
+      :visible="modalIsVisible"
+      @modal-on-close="modalIsVisible = false"
+      @modal-on-confirm="hideAndDelete"
+    >
+      <p>确定要删除这篇文章吗？</p>
+    </modal>
   </div>
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, onMounted } from 'vue'
+import { computed, defineComponent, onMounted, ref } from 'vue'
 import { useStore } from 'vuex'
-import { useRoute } from 'vue-router'
-import { GlobalDataProps, ImageProps, PostProps, UserProps } from '@/store'
+import { useRoute, useRouter } from 'vue-router'
+import {
+  GlobalDataProps,
+  ImageProps,
+  PostProps,
+  UserProps,
+  ResponseTypeProps
+} from '@/store'
+
+import Modal from '@/components/Modal.vue'
+
 import MarkdownIt from 'markdown-it'
+import createMessage from '@/utils/createMessage'
 
 export default defineComponent({
+  components: { Modal },
   setup() {
     const store = useStore<GlobalDataProps>()
+    const router = useRouter()
     const route = useRoute()
     const currentId = route.params.id
     const md = MarkdownIt()
+    const modalIsVisible = ref(false)
     onMounted(() => {
       store.dispatch('getPost', currentId)
     })
@@ -89,11 +111,25 @@ export default defineComponent({
       }
     })
 
+    const hideAndDelete = () => {
+      modalIsVisible.value = false
+      store
+        .dispatch('deletePost', currentId)
+        .then((rawData: ResponseTypeProps<PostProps>) => {
+          createMessage('删除成功，2秒后跳转到专栏首页', 'success', 2000)
+          setTimeout(() => {
+            router.push({ name: 'column', params: { id: rawData.data.column } })
+          }, 2000)
+        })
+    }
+
     return {
       currentPost,
       currentImageUrl,
       currentHTML,
-      showEditArea
+      showEditArea,
+      modalIsVisible,
+      hideAndDelete
     }
   }
 })
