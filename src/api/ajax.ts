@@ -46,7 +46,7 @@ const ajax = (baseURL: string, url: string, data = {}, method = 'GET', config?: 
       return instance.post(url, data)
     case 'PUT':
       return instance.put(url, data)
-    case 'PACTH':
+    case 'PATCH':
       return instance.patch(url, data)
     case 'DELETE':
       return instance.delete(url, data)

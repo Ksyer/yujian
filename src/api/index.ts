@@ -45,3 +45,6 @@ export const reqCreatePost = (post: PostProps) => ajax(BASE_URL, '/posts', post,
 
 // 通过id查询文章
 export const reqPost = (id: string) => ajax(BASE_URL, `/posts/${id}`)
+
+// 更新文章
+export const reqUpdatePost = (post: PostProps) => ajax(BASE_URL, `/posts/${post._id}`, post, 'PATCH')
