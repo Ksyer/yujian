@@ -1,5 +1,5 @@
 import { createStore } from 'vuex'
-import { reqColumns, reqColumn, reqPosts, reqLogin, reqCurrentUser, reqCreatePost } from '@/api'
+import { reqColumns, reqColumn, reqPosts, reqLogin, reqCurrentUser, reqCreatePost, reqPost } from '@/api'
 import axios from 'axios'
 
 export interface ResponseTypeProps<P> {
@@ -45,6 +45,7 @@ export interface PostProps {
   createdAt?: string
   column: string
   author?: string | UserProps
+  isHTML?: boolean
 }
 
 export interface GlobalErrorProps {
@@ -103,6 +104,10 @@ const store = createStore<GlobalDataProps>({
       state.user = { isLogin: false }
       localStorage.removeItem('token')
       delete axios.defaults.headers.common.Authorization
+    },
+    getPost(state, rawData) {
+      console.log(rawData)
+      state.posts = [rawData.data]
     }
   },
   actions: {
@@ -134,6 +139,10 @@ const store = createStore<GlobalDataProps>({
     async createPost({ commit }, payload: PostProps) {
       const res = await reqCreatePost(payload)
       commit('createPost', res.data)
+    },
+    async getPost({ commit }, id: string) {
+      const res = await reqPost(id)
+      commit('getPost', res.data)
     }
   },
   getters: {
@@ -142,6 +151,9 @@ const store = createStore<GlobalDataProps>({
     },
     getPostsById: state => (cid: string) => {
       return state.posts.filter(post => post.column === cid)
+    },
+    getCurrentPost: (state) => () => {
+      return state.posts[0]
     }
   }
 })

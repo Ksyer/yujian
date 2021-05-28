@@ -42,3 +42,6 @@ export const reqUpload = <T>(url: string, formData: T) => ajax(BASE_URL, url, fo
 
 // 新建文章
 export const reqCreatePost = (post: PostProps) => ajax(BASE_URL, '/posts', post, 'POST')
+
+// 通过id查询文章
+export const reqPost = (id: string) => ajax(BASE_URL, `/posts/${id}`)
