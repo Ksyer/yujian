@@ -81,7 +81,7 @@ export default defineComponent({
       store.dispatch('getPost', currentId)
     })
     const currentPost = computed<PostProps>(() =>
-      store.getters.getCurrentPost()
+      store.getters.getCurrentPost(currentId)
     )
 
     const currentImageUrl = computed(() => {

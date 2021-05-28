@@ -8,19 +8,31 @@
         >
       </li>
       <li class="list-inline-item">
-        <router-link class="btn btn-outline-light my-2" :to="'/signup'">注册</router-link>
+        <router-link class="btn btn-outline-light my-2" :to="'/signup'"
+          >注册</router-link
+        >
       </li>
     </ul>
     <ul class="list-inline mb-0" v-else>
       <li class="list-inline-item">
         <dropdown :title="`你好${user.nickName}`">
           <dropdown-item
-            ><router-link class="dropdown-item" to="/create">新建文章</router-link></dropdown-item
-          >
-          <dropdown-item disabled><a class="dropdown-item" href="#">编辑资料</a></dropdown-item
+            ><router-link class="dropdown-item" to="/create"
+              >新建文章</router-link
+            ></dropdown-item
           >
           <dropdown-item
-            ><a class="dropdown-item" href="#" @click.prevent="onLogout">退出登录</a></dropdown-item
+            ><router-link :to="`/column/${user.column}`" class="dropdown-item"
+              >我的专栏</router-link
+            ></dropdown-item
+          >
+          <dropdown-item disabled
+            ><a class="dropdown-item" href="#">编辑资料</a></dropdown-item
+          >
+          <dropdown-item
+            ><a class="dropdown-item" href="#" @click.prevent="onLogout"
+              >退出登录</a
+            ></dropdown-item
           >
         </dropdown>
       </li>

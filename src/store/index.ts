@@ -11,6 +11,11 @@ import {
   reqDeletePost
 } from '@/api'
 import axios from 'axios'
+import { objToArr, arrToObj } from '@/utils/helper'
+
+interface ListProps<P> {
+  [id: string]: P
+}
 
 export interface ResponseTypeProps<P> {
   code: number
@@ -67,8 +72,8 @@ export interface GlobalDataProps {
   error: GlobalErrorProps
   token: string
   isLoading: boolean
-  columns: ColumnProps[]
-  posts: PostProps[]
+  columns: ListProps<ColumnProps>
+  posts: ListProps<PostProps>
   user: UserProps
 }
 
@@ -77,22 +82,22 @@ const store = createStore<GlobalDataProps>({
     error: { status: false },
     token: localStorage.getItem('token') || '',
     isLoading: false,
-    columns: [],
-    posts: [],
+    columns: {},
+    posts: {},
     user: { isLogin: false }
   },
   mutations: {
     createPost(state, newPost) {
-      state.posts.push(newPost)
+      state.posts[newPost._id] = newPost
     },
     getColumns(state, rawData) {
-      state.columns = rawData.data.list
+      state.columns = arrToObj(rawData.data.list)
     },
     getColumn(state, rawData) {
-      state.columns = [rawData.data]
+      state.columns[rawData.data._id] = rawData.data
     },
     getPosts(state, rawData) {
-      state.posts = rawData.data.list
+      state.posts = arrToObj(rawData.data.list)
     },
     setLoading(state, status) {
       state.isLoading = status
@@ -116,19 +121,13 @@ const store = createStore<GlobalDataProps>({
       delete axios.defaults.headers.common.Authorization
     },
     getPost(state, rawData) {
-      state.posts = [rawData.data]
+      state.posts[rawData.data._id] = rawData.data
     },
     updatePost(state, { data }) {
-      state.posts = state.posts.map(post => {
-        if (post._id === data._id) {
-          return data
-        } else {
-          return post
-        }
-      })
+      state.posts[data._id] = data
     },
     deletePost(state, { data }) {
-      state.posts = state.posts.filter(post => post._id !== data._id)
+      delete state.posts[data._id]
     }
   },
   actions: {
@@ -177,14 +176,17 @@ const store = createStore<GlobalDataProps>({
     }
   },
   getters: {
+    getColumns: state => {
+      return objToArr(state.columns)
+    },
     getColumnById: state => (id: string) => {
-      return state.columns.find(c => c._id === id)
+      return state.columns[id]
     },
     getPostsById: state => (cid: string) => {
-      return state.posts.filter(post => post.column === cid)
+      return objToArr(state.posts).filter(post => post.column === cid)
     },
-    getCurrentPost: state => () => {
-      return state.posts[0]
+    getCurrentPost: state => (id: string) => {
+      return state.posts[id]
     }
   }
 })
