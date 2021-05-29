@@ -13,6 +13,15 @@ import {
 import axios from 'axios'
 import { objToArr, arrToObj } from '@/utils/helper'
 
+export interface pageParams {
+  currentPage?: number
+  pageSize?: number
+}
+
+export interface fetchPostsParams extends pageParams {
+  cid: string
+}
+
 interface ListProps<P> {
   [id: string]: P
 }
@@ -79,7 +88,10 @@ export interface GlobalDataProps {
   }
   posts: {
     data: ListProps<PostProps>
-    loadedColumns: string[]
+    loadedColumns: {
+      [id: string]: number
+    }
+    total: number
   }
   user: UserProps
 }
@@ -90,7 +102,7 @@ const store = createStore<GlobalDataProps>({
     token: localStorage.getItem('token') || '',
     isLoading: false,
     columns: { data: {}, currentPage: 0, total: 0 },
-    posts: { data: {}, loadedColumns: [] },
+    posts: { data: {}, loadedColumns: {}, total: 0 },
     user: { isLogin: false }
   },
   mutations: {
@@ -110,8 +122,13 @@ const store = createStore<GlobalDataProps>({
       state.columns.data[rawData.data._id] = rawData.data
     },
     getPosts(state, { data: rawData, extraData: columnId }) {
-      state.posts.data = { ...state.posts.data, ...arrToObj(rawData.data.list) }
-      state.posts.loadedColumns.push(columnId)
+      const { data, loadedColumns } = state.posts
+      const { list, count, currentPage } = rawData.data
+      state.posts = {
+        data: { ...data, ...arrToObj(list) },
+        loadedColumns: { ...loadedColumns, [columnId]: currentPage },
+        total: count
+      }
     },
     setLoading(state, status) {
       state.isLoading = status
@@ -145,14 +162,14 @@ const store = createStore<GlobalDataProps>({
     }
   },
   actions: {
-    async getColumns({ state, commit }, params = {}) {
-      const { currentPage = 1, pageSize = 6 } = params
+    async getColumns({ state, commit }, payload: pageParams) {
+      const { currentPage = 1, pageSize = 6 } = payload
       // if (!state.columns.isLoaded) {
       // const res = await reqColumns(currentPage, pageSize)
       // commit('getColumns', res.data)
       // }
-      if(state.columns.currentPage < currentPage) {
-        const res = await reqColumns(currentPage, pageSize)
+      if (state.columns.currentPage < currentPage) {
+        const res = await reqColumns({ currentPage, pageSize })
         commit('getColumns', res.data)
       }
     },
@@ -162,9 +179,11 @@ const store = createStore<GlobalDataProps>({
         commit('getColumn', res.data)
       }
     },
-    async getPosts({ state, commit }, cid: string) {
-      if (!state.posts.loadedColumns.includes(cid)) {
-        const res = await reqPosts(cid)
+    async getPosts({ state, commit }, payload: fetchPostsParams) {
+      const { cid, currentPage = 1, pageSize = 6 } = payload
+      const { loadedColumns } = state.posts
+      if (!(cid in loadedColumns) || loadedColumns[cid] < currentPage) {
+        const res = await reqPosts({ cid, currentPage, pageSize })
         commit('getPosts', { data: res.data, extraData: cid })
       }
     },

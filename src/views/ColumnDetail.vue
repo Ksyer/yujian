@@ -17,6 +17,15 @@
       </div>
     </div>
     <post-list :list="list"></post-list>
+    <div class="text-center">
+      <button
+        class="btn btn-outline-primary mt-2 mb-5 btn-block w-25"
+        @click="loadMorePage"
+        v-if="!isLastPage"
+      >
+        加载更多
+      </button>
+    </div>
   </div>
 </template>
 
@@ -29,6 +38,7 @@ import { ColumnProps, GlobalDataProps } from '@/store'
 import PostList from '@/components/PostList.vue'
 
 import { addColumnAvatar } from '@/utils/helper'
+import useLoadMore from '@/hooks/useLoadMore'
 
 export default defineComponent({
   name: 'ColumnDetail',
@@ -36,30 +46,44 @@ export default defineComponent({
   setup() {
     const route = useRoute()
     const store = useStore<GlobalDataProps>()
-    const currentId = route.params.id
+    const currentId = route.params.id + ''
+    const total = computed(() => store.state.posts.total)
+    const currentPage = computed(() => store.state.posts.loadedColumns[currentId])
 
     onMounted(() => {
       store.dispatch('getColumn', currentId)
-      store.dispatch('getPosts', currentId)
+      store.dispatch('getPosts', { cid: currentId, pageSize: 3 })
     })
 
     const column = computed(() => {
-      const selectColumn = store.getters.getColumnById(currentId) as ColumnProps | undefined
+      const selectColumn = store.getters.getColumnById(currentId) as
+        | ColumnProps
+        | undefined
       if (selectColumn) {
         addColumnAvatar(selectColumn, 100, 100)
       }
       return selectColumn
     })
     const list = computed(() => store.getters.getPostsById(currentId))
+    const { loadMorePage, isLastPage } = useLoadMore('getPosts', total, {
+      pageSize: 3,
+      currentPage: currentPage.value ? currentPage.value + 1 : 2,
+      cid: currentId
+    })
 
-    return { column, list }
+    return {
+      column,
+      list,
+      loadMorePage,
+      isLastPage
+    }
   }
 })
 </script>
 
 <style>
 .w-690 {
-    width: 690px;
-    margin: 0 auto;
+  width: 690px;
+  margin: 0 auto;
 }
 </style>

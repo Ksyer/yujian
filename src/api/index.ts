@@ -3,7 +3,7 @@
 // http://api.vikingship.xyz/api/columns
 
 import ajax from '@/api/ajax'
-import { LoginProps, PostProps } from '@/store'
+import { LoginProps, PostProps, pageParams, fetchPostsParams } from '@/store'
 
 interface SigProps {
   email: string
@@ -27,16 +27,16 @@ export const reqSignup = (user: SigProps) => ajax(BASE_URL, '/users', user, 'POS
 /* 专栏模块
 -----------------------------------------------------------------*/
 // 请求专栏列表
-export const reqColumns = (currentPage: number, pageSize: number) => ajax(BASE_URL, `/columns?currentPage=${currentPage}&pageSize=${pageSize}`)
+export const reqColumns = (page: pageParams) => ajax(BASE_URL, `/columns?currentPage=${page.currentPage}&pageSize=${page.pageSize}`)
 
 // 通过id请求专栏
 export const reqColumn = (cid: string) => ajax(BASE_URL, `/columns/${cid}`)
 
-// 通过id请求文章列表
-export const reqPosts = (cid: string) => ajax(BASE_URL, `/columns/${cid}/posts`)
-
 /* 文章模块
 -----------------------------------------------------------------*/
+// 通过id请求文章列表
+export const reqPosts = (params: fetchPostsParams) => ajax(BASE_URL, `/columns/${params.cid}/posts?currentPage=${params.currentPage}&pageSize=${params.pageSize}`)
+
 // 文件上传
 export const reqUpload = <T>(url: string, formData: T) => ajax(BASE_URL, url, formData, 'POST')
 
