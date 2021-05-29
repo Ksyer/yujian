@@ -46,7 +46,9 @@
 import { defineComponent, PropType } from 'vue'
 import Dropdown from './Dropdown.vue'
 import DropdownItem from './DropdownItem.vue'
+import { useRouter } from 'vue-router'
 import store, { UserProps } from '@/store'
+import createMessage from '@/utils/createMessage'
 
 export default defineComponent({
   name: 'GlobalHeader',
@@ -58,8 +60,13 @@ export default defineComponent({
     }
   },
   setup() {
+    const router = useRouter()
     const onLogout = () => {
-      store.commit('logout')
+      createMessage('登录成功，2秒后跳转首页', 'success')
+      setTimeout(() => {
+        store.commit('logout')
+        router.push('/')
+      }, 2000)
     }
 
     return { onLogout }
