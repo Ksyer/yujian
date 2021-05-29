@@ -5,7 +5,7 @@
     <h1 v-if="error.message">{{ error.message }}</h1>
     <loader v-if="isLoading"></loader>
     <!-- 主体 -->
-    <router-view class="container-md"></router-view>
+    <router-view></router-view>
   </div>
   <!-- 底部 -->
   <footer class="text-center py-4 text-secondary bg-light mt-6">

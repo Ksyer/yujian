@@ -1,5 +1,5 @@
 <template>
-  <div class="create-post-page">
+  <div class="create-post-page container-md">
     <h4>{{ isEditMode ? '编辑文章' : '新建文章' }}</h4>
     <uploader
       class="d-flex align-items-center justify-content-center bg-light text-secondary w-100 my-4"
