@@ -1,6 +1,6 @@
 <template>
-  <div class="post-detail-page">
-    <article class="w-75 mx-auto mb-5 pb-3" v-if="currentPost">
+  <div class="post-detail-page w-690">
+    <article class="mb-5 pb-3" v-if="currentPost">
       <img
         :src="currentImageUrl"
         alt="currentPost.title"
@@ -64,12 +64,13 @@ import {
 } from '@/store'
 
 import Modal from '@/components/Modal.vue'
+import UserProfile from '@/components/UserProfile.vue'
 
 import MarkdownIt from 'markdown-it'
 import createMessage from '@/utils/createMessage'
 
 export default defineComponent({
-  components: { Modal },
+  components: { Modal, UserProfile },
   setup() {
     const store = useStore<GlobalDataProps>()
     const router = useRouter()
@@ -135,5 +136,11 @@ export default defineComponent({
 })
 </script>
 
-<style>
+<style scoped>
+.text-right {
+  text-align: right !important;
+}
+.font-italic {
+    font-style: italic!important;
+}
 </style>
