@@ -27,7 +27,7 @@ export const reqSignup = (user: SigProps) => ajax(BASE_URL, '/users', user, 'POS
 /* 专栏模块
 -----------------------------------------------------------------*/
 // 请求专栏列表
-export const reqColumns = () => ajax(BASE_URL, '/columns')
+export const reqColumns = (currentPage: number, pageSize: number) => ajax(BASE_URL, `/columns?currentPage=${currentPage}&pageSize=${pageSize}`)
 
 // 通过id请求专栏
 export const reqColumn = (cid: string) => ajax(BASE_URL, `/columns/${cid}`)
