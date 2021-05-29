@@ -1,6 +1,6 @@
 <template>
   <div class="signup-page mx-auto p-3 w-330">
-    <h5 class="my-4 text-center">注册者也账户</h5>
+    <h5 class="my-4 text-center">注册喻鉴账户</h5>
     <validate-form @form-submit="onFormSubmit">
       <div class="mb-3">
         <label class="form-label">邮箱地址</label>
@@ -37,6 +37,9 @@
           :rules="repeatPasswordRules"
           v-model="formData.repeatPassword"
         />
+        <div class="form-text">
+          <router-link :to="'/login'">已经有账户了？去登录</router-link>
+        </div>
       </div>
       <template #submit>
         <button type="submit" class="btn btn-primary btn-block btn-large">

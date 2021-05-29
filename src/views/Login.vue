@@ -1,25 +1,38 @@
 <template>
-  <validate-form @form-submit="onFormSubmit">
-    <div class="mb-3">
-      <label for="exampleInputEmail1" class="form-label">邮箱</label>
-      <validate-input
-        :rules="emailRules"
-        v-model="emailVal"
-        type="text"
-        placeholder="请输入邮箱"
-        ref="inputRef"
-      ></validate-input>
-    </div>
-    <div class="mb-3">
-      <label for="exampleInputEmail1" class="form-label">密码</label>
-      <validate-input
-        :rules="passwordRules"
-        v-model="passwordVal"
-        type="password"
-        placeholder="请输入密码"
-      ></validate-input>
-    </div>
-  </validate-form>
+  <div class="login-page mx-auto p-3 w-330">
+    <h5 class="my-4 text-center">登录到喻鉴</h5>
+    <validate-form @form-submit="onFormSubmit">
+      <div class="mb-3">
+        <label for="exampleInputEmail1" class="form-label">邮箱</label>
+        <validate-input
+          :rules="emailRules"
+          v-model="emailVal"
+          type="text"
+          placeholder="请输入邮箱"
+          ref="inputRef"
+        ></validate-input>
+      </div>
+      <div class="mb-3">
+        <label for="exampleInputEmail1" class="form-label">密码</label>
+        <validate-input
+          :rules="passwordRules"
+          v-model="passwordVal"
+          type="password"
+          placeholder="请输入密码"
+        ></validate-input>
+        <div class="form-text">
+          <router-link :to="'/signup'"
+            >还没有账户？去注册一个新的吧！</router-link
+          >
+        </div>
+      </div>
+      <template #submit>
+        <button type="submit" class="btn btn-primary btn-block btn-large">
+          登录
+        </button>
+      </template>
+    </validate-form>
+  </div>
 </template>
 
 <script lang="ts">
@@ -78,3 +91,12 @@ export default defineComponent({
 })
 </script>
 
+<style>
+.w-330 {
+  max-width: 330px;
+}
+.btn-block {
+  display: block;
+  width: 100%;
+}
+</style>
