@@ -1,5 +1,5 @@
 <template>
-  <div class="home-page">
+  <div class="home-page container-md">
     <section class="text-center container">
       <div class="row py-lg-5">
         <div class="col-lg-6 col-md-8 mx-auto">
@@ -40,13 +40,14 @@ export default defineComponent({
   setup() {
     const store = useStore<GlobalDataProps>()
     const total = computed(() => store.state.columns.total)
+    const currentPage = computed(() => store.state.columns.currentPage)
     onMounted(() => {
       store.dispatch('getColumns', { pageSize: 3 })
     })
     const list = computed(() => store.getters.getColumns)
     const { loadMorePage, isLastPage } = useLoadMore('getColumns', total, {
       pageSize: 3,
-      currentPage: 2
+      currentPage: currentPage.value ? currentPage.value + 1 : 2
     })
 
     return {

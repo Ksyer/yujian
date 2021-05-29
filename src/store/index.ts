@@ -72,8 +72,15 @@ export interface GlobalDataProps {
   error: GlobalErrorProps
   token: string
   isLoading: boolean
-  columns: { data: ListProps<ColumnProps>; isLoaded: boolean; total: number }
-  posts: { data: ListProps<PostProps>; loadedColumns: string[] }
+  columns: {
+    data: ListProps<ColumnProps>
+    currentPage: number
+    total: number
+  }
+  posts: {
+    data: ListProps<PostProps>
+    loadedColumns: string[]
+  }
   user: UserProps
 }
 
@@ -82,7 +89,7 @@ const store = createStore<GlobalDataProps>({
     error: { status: false },
     token: localStorage.getItem('token') || '',
     isLoading: false,
-    columns: { data: {}, isLoaded: false, total: 0 },
+    columns: { data: {}, currentPage: 0, total: 0 },
     posts: { data: {}, loadedColumns: [] },
     user: { isLogin: false }
   },
@@ -92,10 +99,10 @@ const store = createStore<GlobalDataProps>({
     },
     getColumns(state, rawData) {
       const { data } = state.columns
-      const { list, count } = rawData.data
+      const { list, count, currentPage } = rawData.data
       state.columns = {
         data: { ...data, ...arrToObj(list) },
-        isLoaded: true,
+        currentPage: currentPage * 1, // 类型转换
         total: count
       }
     },
@@ -141,9 +148,13 @@ const store = createStore<GlobalDataProps>({
     async getColumns({ state, commit }, params = {}) {
       const { currentPage = 1, pageSize = 6 } = params
       // if (!state.columns.isLoaded) {
-      const res = await reqColumns(currentPage, pageSize)
-      commit('getColumns', res.data)
+      // const res = await reqColumns(currentPage, pageSize)
+      // commit('getColumns', res.data)
       // }
+      if(state.columns.currentPage < currentPage) {
+        const res = await reqColumns(currentPage, pageSize)
+        commit('getColumns', res.data)
+      }
     },
     async getColumn({ state, commit }, cid: string) {
       if (!state.columns.data[cid]) {
