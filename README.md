@@ -6,7 +6,7 @@
 
 - 项目：喻鉴专栏，一个类似知乎专栏的网站
 
-- 技术栈：vue3 + ts + bootstrap + vuex + vue-router + axios
+- 技术栈：vue3 + ts + bootstrap5 + vuex + vue-router + axios
 
 - 规范：
   - RESTful
@@ -25,6 +25,18 @@
   }
   "vetur.experimental.templateInterpolationService": true, // 通过把vue转换成ts，分析补全再转成vue
   ```
+
+## 项目启动
+
+```cmd
+git clone git@github.com:Ksyer/yujian.git
+
+cd yujian
+
+yarn install
+
+yarn serve
+```
 
 ## 项目内容
 
