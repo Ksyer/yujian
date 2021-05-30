@@ -8,7 +8,7 @@
           :rules="emailRules"
           v-model="emailVal"
           type="text"
-          placeholder="请输入邮箱"
+          placeholder="请输入邮箱 [nnn@test.com]"
           ref="inputRef"
         ></validate-input>
       </div>
@@ -18,7 +18,7 @@
           :rules="passwordRules"
           v-model="passwordVal"
           type="password"
-          placeholder="请输入密码"
+          placeholder="请输入密码 [123456]"
         ></validate-input>
         <div class="form-text">
           <router-link :to="'/signup'"
