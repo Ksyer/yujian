@@ -106,8 +106,8 @@ const store = createStore<GlobalDataProps>({
     user: { isLogin: false }
   },
   mutations: {
-    createPost(state, newPost) {
-      state.posts.data[newPost._id] = newPost
+    createPost(state, rawData) {
+      state.posts.data[rawData.data._id] = rawData.data
     },
     getColumns(state, rawData) {
       const { data } = state.columns
@@ -154,11 +154,11 @@ const store = createStore<GlobalDataProps>({
     getPost(state, rawData) {
       state.posts.data[rawData.data._id] = rawData.data
     },
-    updatePost(state, { data }) {
-      state.posts.data[data._id] = data
+    updatePost(state, rawData) {
+      state.posts.data[rawData.data._id] = rawData.data
     },
-    deletePost(state, { data }) {
-      delete state.posts.data[data._id]
+    deletePost(state, rawData) {
+      delete state.posts.data[rawData.data._id]
     }
   },
   actions: {
@@ -217,11 +217,11 @@ const store = createStore<GlobalDataProps>({
     },
     async updatePost({ commit }, payload: PostProps) {
       const res = await reqUpdatePost(payload)
-      commit('updatePost', res)
+      commit('updatePost', res.data)
     },
     async deletePost({ commit }, id: string) {
       const res = await reqDeletePost(id)
-      commit('deletePost', res)
+      commit('deletePost', res.data)
       return res.data
     }
   },

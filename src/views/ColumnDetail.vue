@@ -50,11 +50,6 @@ export default defineComponent({
     const total = computed(() => store.state.posts.total)
     const currentPage = computed(() => store.state.posts.loadedColumns[currentId])
 
-    onMounted(() => {
-      store.dispatch('getColumn', currentId)
-      store.dispatch('getPosts', { cid: currentId, pageSize: 3 })
-    })
-
     const column = computed(() => {
       const selectColumn = store.getters.getColumnById(currentId) as
         | ColumnProps
@@ -69,6 +64,11 @@ export default defineComponent({
       pageSize: 3,
       currentPage: currentPage.value ? currentPage.value + 1 : 2,
       cid: currentId
+    })
+
+    onMounted(() => {
+      store.dispatch('getColumn', currentId)
+      store.dispatch('getPosts', { cid: currentId, pageSize: 3 })
     })
 
     return {
