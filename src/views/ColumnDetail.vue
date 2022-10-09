@@ -19,7 +19,7 @@
     <post-list :list="list"></post-list>
     <div class="text-center">
       <button
-        class="btn btn-outline-primary mt-2 mb-5 btn-block w-25"
+        class="btn btn-outline-primary mt-2 mb-5 w-25"
         @click="loadMorePage"
         v-if="!isLastPage"
       >
