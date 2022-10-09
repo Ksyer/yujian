@@ -1,4 +1,5 @@
 module.exports = {
+  publicPath: '/yujian',
   devServer: {
     open: true,
     proxy: {

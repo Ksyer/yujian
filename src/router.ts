@@ -13,7 +13,7 @@ import CreatePost from '@/views/CreatePost.vue'
 // import Signup from '@/views/Signup.vue'
 import PostDetail from '@/views/PostDetail.vue'
 
-const routerHistory = createWebHistory()
+const routerHistory = createWebHistory('/yujian')
 const router = createRouter({
   history: routerHistory,
   routes: [
