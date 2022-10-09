@@ -11,7 +11,10 @@ interface SigProps {
   password: string
 }
 
-const BASE_URL = '/api'
+let BASE_URL = '/api'
+if (process.env.NODE_ENV === 'test') {
+  BASE_URL = process.env.VUE_APP_BASEURL
+}
 
 /* 用户模块
 -----------------------------------------------------------------*/
